@@ -1,3 +1,6 @@
+"""Controller Logic for User and Lectures Module
+"""
+
 from udemy.lectures.models import User,Course,Section,Lecture,LectureSchema
 from flask import jsonify,request
 from udemy.extensions import db
@@ -5,8 +8,12 @@ import pandas as pd
 
 def get_lectures():
 
-    #getting all the lectures data
-   
+    """List all the lectures
+    Args:
+        args (dict): pagination and filter information
+    Returns:
+        list :  lectures information serialised as json
+    """
     lectureschema=LectureSchema(many=True)
     lectures=Lecture.query.all()
     print(lectures)
@@ -19,6 +26,8 @@ def add_lecture():
     adding a lecture to the Lectures data
     Args:
         lecture data: json-data
+    Returns:
+        str : Status of adding lecture
     """
     data=request.get_json()
     id=data['id']
@@ -33,6 +42,13 @@ def add_lecture():
         return "invalid lecture or lecture already exists"
 
 def update_lecture():
+    """Update an existing lecture
+    Args:
+        args (dict): lecture information
+    Returns:
+        object (dict) : updated lecture information object
+    """
+    
     data=request.get_json()
     id=data['id']
     title=data['title']
@@ -48,6 +64,13 @@ def update_lecture():
         return "invalid Lecture"
 
 def delete_lecture():
+    """Delete existing lecture
+    Args:
+        lecture_id : id of the lecture to be deleted
+    Returns:
+        str : Status of deletion
+    """
+    
     data=request.get_json()
     id=data['id']
     try:
@@ -63,7 +86,8 @@ def upload_lectures_data(input_sheet):
     UPload the lecture data
     Args:
         excel_file (bytes): excel file with data to upload
-
+    Returns:
+        str : Status of uploading bulk lectures data
     """
     xlsx=pd.ExcelFile(input_sheet)
     sheet_df_dict = pd.read_excel(xlsx,sheet_name=["lecture","section","course"],skiprows=1)
