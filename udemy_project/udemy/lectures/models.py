@@ -1,6 +1,7 @@
 from udemy.extensions import db,ma
 from flask_marshmallow import fields
 
+# Third party imports
 from sqlalchemy import (
     Column,
     DECIMAL,
@@ -32,10 +33,10 @@ class User(db.Model):
     def identify(cls,username):
         return cls.query.get(username).one_or_none()
 
+    # properties and methods required by Praetorian
     @property
     def rolenames(self):
         return []
-    
 
     @property
     def identity(self):
@@ -58,6 +59,7 @@ class Lecture(db.Model):
     title=db.Column(db.String(50))
     section_id=db.Column(db.Integer,db.ForeignKey(Section.id),nullable=False)
 
+#schema to serialize the lectures data
 class LectureSchema(ma.SQLAlchemyAutoSchema):
     class Meta():
         model=Lecture
