@@ -1,0 +1,78 @@
+1) Find all the lectures that belong to a given course say 'Flask'
+results=Lecture.query.join(Section,Section.id==Lecture.section_id).join(Course,Course.id==Section.course_id)\
+            .filter(Course.title=="flask")\
+            .with_entities(Lecture.id,Lecture.title,Section.id,Course.id).all()
+        for result in results:
+            print(result[1])
+
+
+2) Which course has a given Section with title 'Set-up'
+results=Course.query.join(Section)\
+            .filter(Section.title=='Set-up').with_entities(Course.title).all()
+        for result in results:
+            print(result.title)
+
+
+3) Which course has no lecture containing keyword 'design' 
+        keyword="design"
+        tag="%{}%".format(keyword)
+        results=Lecture.query.join(Section,Section.id==Lecture.section_id).join(Course,Course.id==Section.course_id)\
+            .filter(Lecture.title.like(tag))\
+            .with_entities(Course.title).distinct().all()
+        
+        l=[]
+        for i in results:
+            l.append(i.title)
+        finalres=Course.query.filter(Course.title.notin_(l)).with_entities(Course.title).all()
+        
+        print(finalres)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+create table course(id int primary key,title varchar(20));
+create table section(id int primary key,title varchar(20),course_id int,
+foreign key(course_id) references course(id)
+);
+create table lecture(id int primary key, title varchar(50),section_id int,
+foreign key(section_id) references section(id)
+);
+
+insert into course values(1,"flask"),(2,"nodejs");
+insert into section values(1,"setup",1),(2,"introduction",1),(3,"SQL-Alchemy",1),
+(4,"settingup",2),(5,"Getting started",2);
+insert into lecture values(1,"setting up on windows",1),(2,"setting up linux",1),
+(3,"introduction to flask",2),(4,"design a restaurant database",3),
+(5,"setting up on windows",4),(6,"javascript refresher",5);
+
+with cte as(
+select course.title
+from course
+join section 
+on course.id=section.course_id
+join lecture 
+on  section.id=lecture.section_id
+where lecture.title like '%design%'
+)
+
+select title from course where title not in (select title from cte);
+
+
+
+
+
+
+
+
