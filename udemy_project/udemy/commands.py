@@ -1,3 +1,7 @@
+"""This Module contains custom management commands.
+Useful for updating the seed data information & data to be inserted via deployments.
+"""
+
 import pandas as pd
 import click
 from flask.cli import with_appcontext
