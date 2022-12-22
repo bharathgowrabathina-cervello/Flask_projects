@@ -1,3 +1,8 @@
+"""Entrypoint for the base application.
+Returns:
+    Flask: Flask app instance
+"""
+
 from os import getenv
 from flask import Flask,jsonify,request
 import pymssql
@@ -6,7 +11,10 @@ from sqlalchemy import create_engine
 from udemy import extensions
 from flask import Blueprint
 from flask_restx import Api as RestX_Api
+
+# # NOTE: It's important to import the models here for sql-alchemy to recognize
 from udemy.lectures.models import User,Course,Section,Lecture
+
 from udemy.extensions import db,guard
 from flask_praetorian import auth_required
 from udemy.commands import lecturedata,sectiondata,coursedata
@@ -19,7 +27,6 @@ from .users.v1 import open_api,auth_api
 
 api_blueprint = Blueprint("api", __name__, url_prefix="/api")
 
-# api_blueprint.register_blueprint(training_api_v1)
 
 # initialize restx
 rest_api = RestX_Api(
@@ -27,11 +34,14 @@ rest_api = RestX_Api(
     title="udemy"
 )
 
+# add namespaces to restx
 rest_api.add_namespace(open_api,path='/v1')
 rest_api.add_namespace(auth_api,path='/v1')
 
 
 def create_app():   #or make_app()
+    """Create the flask app and intialize all the extensions"""
+    
     app = Flask(__name__)
 
     app.config.from_object(get_config_object_path())
@@ -41,13 +51,15 @@ def create_app():   #or make_app()
 
      # initializing all extensions
     extensions.init_extensions(app)
+    
+    # praetorian (JWT token) intialize
     extensions.guard.init_app(app,User)
     
     @app.route('/')
     def home():
         return "<h2>Hello world!! Welcome to Home Page <h2>"
 
-
+    # custome management commands
     app.cli.add_command(lecturedata)
     app.cli.add_command(sectiondata)
     app.cli.add_command(coursedata)
@@ -56,6 +68,12 @@ def create_app():   #or make_app()
 
 
 def get_config_object_path():
+    """reads `FLASK_ENV` from OS and returns string that can be used with app.config.from_object.
+    If `FLASK_ENV` not set in OS, returns `base.config.DevelopmentConfig`
+    Returns:
+        str: one of 'base.config.DevelopmentConfig', 'base.config.TestingConfig', 'base.config.ProductionConfig'
+    """
+    
     dev_config = "udemy.config.DevelopmentConfig"
     env = getenv('FLASK_ENV')
     environment_config = dev_config
