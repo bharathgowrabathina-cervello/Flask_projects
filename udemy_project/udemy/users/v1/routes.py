@@ -1,3 +1,6 @@
+"""Routes for User and Lecture Modules
+"""
+
 from . import controller as c
 from udemy.extensions import db,guard
 
@@ -46,6 +49,8 @@ class Signup(Resource):
 
 @auth_api.route('/lectures')
 class Lectures(Resource):
+    """Class for user CURD operations in bulk"""
+    
     def get(self):
         return c.get_lectures()
 
