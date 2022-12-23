@@ -31,7 +31,7 @@ class BaseConfig(object):
 
 class DevelopmentConfig(BaseConfig):
     FLASK_DEBUG = True
-    JWT_ACCESS_LIFESPAN = {"minutes": 10}
+    JWT_ACCESS_LIFESPAN = {"minutes": int(os.getenv('JWT_ACCESS_LIFESPAN'))}
 
 
 

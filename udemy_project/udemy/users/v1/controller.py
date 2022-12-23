@@ -37,9 +37,10 @@ def add_lecture():
         lecture=Lecture(id=id,title=title,section_id=section_id)
         db.session.add(lecture)
         db.session.commit()
-        return "lecture added successfully"
+        return jsonify({"message":"lecture added successfully"})
     except Exception as e:
-        return "invalid lecture or lecture already exists"
+        response={"message":"invalid lecture or lecture already exists"}
+        return response,400
 
 def update_lecture():
     """Update an existing lecture
@@ -58,10 +59,10 @@ def update_lecture():
         lecture.title=title
         lecture.section_id=section_id
         db.session.commit()
-        return "Lecture updated successfully"
+        return jsonify({"message":"Lecture updated successfully"})
 
     except Exception as e:
-        return "invalid Lecture"
+        return jsonify({"message":"invalid Lecture"})
 
 def delete_lecture():
     """Delete existing lecture
@@ -77,9 +78,9 @@ def delete_lecture():
         lecture=Lecture.query.get(id)
         db.session.delete(lecture)
         db.session.commit()
-        return "Lecture deleted successfully"
+        return jsonify({"message":"Lecture deleted successfully"})
     except Exception as e:
-        return "Invalid Lecture"
+        return jsonify({"message":"Invalid Lecture"})
 
 def upload_lectures_data(input_sheet):
     """
@@ -90,8 +91,26 @@ def upload_lectures_data(input_sheet):
         str : Status of uploading bulk lectures data
     """
     xlsx=pd.ExcelFile(input_sheet)
-    sheet_df_dict = pd.read_excel(xlsx,sheet_name=["lecture","section","course"],skiprows=1)
-    df_dict=sheet_df_dict["lecture"].copy()
-    list_df_lecture = df_dict.to_dict("records")
-    db.engine.execute(Lecture.__table__.insert(), list_df_lecture)
-    return "successfully uploaded the lecture data"
+    sheets_df_dict = pd.read_excel(xlsx,sheet_name=["course","section","lecture"],skiprows=1)
+    
+    try:
+        # msg=validate_sheet()
+
+        upload_sheet(sheets_df_dict["course"], Course)
+        upload_sheet(sheets_df_dict["section"], Section)
+        upload_sheet(sheets_df_dict["lecture"], Lecture)
+        
+        # df_dict=sheet_df_dict["lecture"].copy()
+        # list_df_lecture = df_dict.to_dict("records")
+        # db.engine.execute(Lecture.__table__.insert(), list_df_lecture)
+        return jsonify({"message":"successfully uploaded the lecture data"})
+
+    except Exception as e:
+        return jsonify({"message":"unable to upload"})
+
+
+def upload_sheet(input_sheet,table):    
+    df_dict=input_sheet
+    list_df_table=df_dict.to_dict("records")
+    db.engine.execute(table.__table__.insert(),list_df_table)
+    
