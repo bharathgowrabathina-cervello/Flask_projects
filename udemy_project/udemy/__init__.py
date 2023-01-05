@@ -17,7 +17,7 @@ from udemy.lectures.models import User,Course,Section,Lecture
 
 from udemy.extensions import db,guard
 from flask_praetorian import auth_required
-from udemy.commands import lecturedata,sectiondata,coursedata
+from udemy.commands import lecturedatac,sectiondatac,coursedatac,deploy,command_code
 
 import click
 from flask.cli import with_appcontext
@@ -39,7 +39,15 @@ rest_api.add_namespace(open_api,path='/v1')
 rest_api.add_namespace(auth_api,path='/v1')
 
 
-def create_app():   #or make_app()
+import logging
+
+# Create and configure logging file
+LOG_FORMAT="%(levelname)s %(asctime)s - %(message)s"
+logging.basicConfig(filename="C:/Users/gkumar01/OneDrive - Kearney/Documents/udemy_logs.log",level=logging.DEBUG,format=LOG_FORMAT)
+
+
+# entry point of the flask application
+def create_app():   
     """Create the flask app and intialize all the extensions"""
     
     app = Flask(__name__)
@@ -60,9 +68,11 @@ def create_app():   #or make_app()
         return "<h2>Hello world!! Welcome to Home Page <h2>"
 
     # custome management commands
-    app.cli.add_command(lecturedata)
-    app.cli.add_command(sectiondata)
-    app.cli.add_command(coursedata)
+    # app.cli.add_command(lecturedatac)
+    # app.cli.add_command(sectiondatac)
+    # app.cli.add_command(coursedatac)
+    # app.cli.add_command(deploy)
+    app.cli.add_command(command_code)
         
     return app
 

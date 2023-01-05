@@ -41,7 +41,7 @@ class User(db.Model):
     @property
     def identity(self):
         return  self.username
-
+    
 
 class Course(db.Model):
     id=db.Column(db.Integer,primary_key=True)

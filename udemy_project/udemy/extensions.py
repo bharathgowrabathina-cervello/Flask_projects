@@ -8,12 +8,13 @@ from flask_migrate import Migrate
 from flask import current_app as app
 from flask_praetorian import Praetorian
 from flask_marshmallow import Marshmallow
-
+from flask_caching import Cache
 
 db=SQLAlchemy()
 migrate=Migrate()
 guard=Praetorian()
 ma=Marshmallow()
+cache=Cache()
 
 def init_extensions(app):
 
@@ -28,3 +29,5 @@ def init_extensions(app):
         #marshmallow
         ma.init_app(app)
 
+        #cache
+        cache.init_app(app)

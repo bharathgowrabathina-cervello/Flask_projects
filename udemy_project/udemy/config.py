@@ -28,6 +28,12 @@ class BaseConfig(object):
     )
     SQLALCHEMY_TRACK_MODIFICATIONS=False
 
+    #cache config
+    CACHE_TYPE=os.getenv('CACHE_TYPE')
+    CACHE_REDIS_HOST=os.getenv('CACHE_REDIS_TYPE')
+    CACHE_REDIS_PORT=os.getenv('CACHE_REDIS_PORT')
+    CACHE_REDIS_URL=os.getenv('CACHE_REDIS_URL')
+
 
 class DevelopmentConfig(BaseConfig):
     FLASK_DEBUG = True
