@@ -67,7 +67,7 @@ def create_app():
     def home():
         return "<h2>Hello world!! Welcome to Home Page <h2>"
 
-    # custome management commands
+    # custom management commands
     # app.cli.add_command(lecturedatac)
     # app.cli.add_command(sectiondatac)
     # app.cli.add_command(coursedatac)

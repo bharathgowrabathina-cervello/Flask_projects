@@ -9,6 +9,7 @@ from udemy.lectures.models import Lecture,Section,Course
 from .extensions import db
 from udemy.commands_seed_data import lecturedata,sectiondata,coursedata
 
+# creating custom command using AppGroup
 command_code = AppGroup("udemy", help="udemy commands")
 
 @command_code.command(name="lecturedata")
