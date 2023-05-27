@@ -65,7 +65,7 @@ def create_app():
     
     @app.route('/')
     def home():
-        return "<h2>Hello world!! Welcome to Home Page <h2>"
+        return "<h2>Hello world!! This is Bharath. Welcome to Home Page <h2>"
 
     # custom management commands
     app.cli.add_command(command_code)
