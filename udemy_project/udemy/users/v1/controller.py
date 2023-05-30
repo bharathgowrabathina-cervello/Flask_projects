@@ -8,7 +8,7 @@ import pandas as pd
 import redis
 
 
-import logging
+# import logging
 
 
 
@@ -23,18 +23,18 @@ def get_lectures():
     Returns:
         list :  lectures information serialised as json
     """
-    logging.info("Trying to access lectures data")
+    # logging.info("Trying to access lectures data")
 
     result=cache.get("get_lectures")
     if result is not None:
-        logging.info('accessed the lectures data')
+        # logging.info('accessed the lectures data')
         return result
 
     lectureschema=LectureSchema(many=True)
     lectures=Lecture.query.all()
     result=lectureschema.dump(lectures)
     cache.set("get_lectures",result,0)
-    logging.info('accessed the lectures data')
+    # logging.info('accessed the lectures data')
     return jsonify(result)
 
 def add_lecture():
@@ -54,7 +54,7 @@ def add_lecture():
         db.session.add(lecture)
         db.session.commit()
         cache.clear()
-        logging.info("new lecture added")
+        # logging.info("new lecture added")
         return jsonify({"message":"lecture added successfully"})
     except Exception as e:
         response={"message":"invalid lecture or lecture already exists"}
@@ -79,7 +79,7 @@ def update_lecture():
         lecture.section_id=section_id
         db.session.commit()
         cache.clear()
-        logging.info("lecture has updated")
+        # logging.info("lecture has updated")
         return jsonify({"message":"Lecture updated successfully"})
 
     except Exception as e:
@@ -100,7 +100,7 @@ def delete_lecture():
         db.session.delete(lecture)
         db.session.commit()
         cache.clear()
-        logging.info("lecture has deleted")
+        # logging.info("lecture has deleted")
         return jsonify({"message":"Lecture deleted successfully"})
     except Exception as e:
         return jsonify({"message":"Invalid Lecture"})
